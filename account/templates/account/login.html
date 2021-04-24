@@ -1,0 +1,22 @@
+{% extends 'poll/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="form">
+    <legend style="font-size: 23px; color:#607d8b;">Login</legend>
+    <hr style="border: .1px solid #9e9e9e;margin-top: 15px;margin-bottom: 15px;">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id='username' name='username' required style="margin-bottom: 10px;">
+
+        <label for="password">password:</label>
+        <input type="password" name="password" id="password">
+        <hr style="border: .1px solid #9e9e9e;width: 50%;margin-top: 15px;margin-bottom: 15px;">
+        <input type="submit" value="Sign in">
+    </form>
+    <p><a style="text-decoration: none;color:blue" href="{% url 'register' %}">Create New Account</a></p>
+    <p><a style="text-decoration: none;color:blue" href="{% url 'reset_password' %}">Forget Your Password</a></p>
+</div>
+{% endblock content %}
+
+

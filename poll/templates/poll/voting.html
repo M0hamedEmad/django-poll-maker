@@ -1,0 +1,30 @@
+{% extends 'poll/base.html' %}
+{% block content %}
+<div class="form-container rounded-3">
+    <div class="voting-form-header">
+        <h2>{{poll.question}}</h2>
+        <p>Chosse one of these option</p>
+    </div>
+    <form method="POST" class="poll-form p-4">
+        {% csrf_token %}
+        {% for option in poll.options.all %}
+          <div class="form-check">
+              <input class="form-check-input" type="radio" name="option" id="{{option.option}}" value="{{option.option}}">
+              <label class="fform-check-label" for="{{option.option}}">
+                {{option.option}}
+              </label>
+          </div>
+          <hr>
+        {% endfor %}
+        {% if messages %}
+          {% for message in messages %}
+            <p class="alert alert-warning">{{message}}</p>
+          {% endfor %}
+        {% endif %}
+        <button class="btn btn-primary" type="submit">Submit Your Vote</button>
+        <a class="btn btn-secondary" href="{% url 'result' poll.id %}">result</a>
+
+    </form>
+
+</div>
+{% endblock content %}

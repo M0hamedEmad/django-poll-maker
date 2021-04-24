@@ -1,0 +1,15 @@
+{% extends 'poll/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="form-container w-50">
+        <p class="p-3" style="font-size: 19px;">Are you sure you want delete "{{poll.question}}"</p>
+        <hr class="w-50" style="margin:5px auto;">
+        <form action="" method="POST" class="poll-form">
+            {% csrf_token %}
+            <div class="p-2 ">
+                <button class="btn btn-danger p-2" type="submit">Delete Poll</button>
+                <a href="/" class="btn btn-secondary p-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
