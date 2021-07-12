@@ -1,0 +1,75 @@
+{% extends 'poll/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Poll Maker{% endblock title %}
+{% block content %}
+	<header>
+		<div class="header-content">
+			<div class="container">
+				<h2 class="fs-4 fw-normal text-center mt-4 text-light">Create Poll New</h2>
+				<div class="multisteps-form">
+					<!--progress bar-->
+					<div class="row">
+						<div class="col-12 col-lg-8 ml-auto mr-auto mb-4">
+							<div class="multisteps-form__progress">
+								<button class="multisteps-form__progress-btn js-active" type="button" title="User Info">Poll</button>
+								<button class="multisteps-form__progress-btn" type="button" title="Address">Settings</button>
+								<!-- <button class="multisteps-form__progress-btn" type="button" title="Comments">Comments        </button> -->
+							</div>
+						</div>
+					</div>
+					<!--form panels-->
+					<div class="row">
+						<div class="col-12 col-lg-8 m-auto">
+							<form action="{% url 'create_poll' %}" method='POST' enctype="multipart/form-data" class="multisteps-form__form config-form">
+								{% csrf_token %}
+								<!--single form panel-->
+								<div class="multisteps-form__panel shadow p-4 rounded js-active" data-animation="scaleIn">
+									<h3 class="multisteps-form__title text-light">Create New Poll</h3>
+									<div class="multisteps-form__content">
+										<div class="question">
+											{{form}}
+										</div>
+										<div class="answer-form">
+											{{answer_form}}
+										</div>
+										<div class="button-row d-flex mt-4 justify-content-around">
+											<input type="submit" value="Create Poll" class="btn btn-primary">
+											<button class="btn btn-secondary ml-auto js-btn-next" type="button" title="Next">Next to settings</button>
+										</div>
+									</div>
+								</div>
+								<!--single form panel-->
+								<div class="multisteps-form__panel shadow p-4 rounded" data-animation="scaleIn">
+									<h3 class="multisteps-form__title text-light">Your Address</h3>
+									<div class="multisteps-form__content">
+										<div class="poll-form">
+											{{poll_form}}
+										</div>
+										<div class="button-row d-flex mt-4 justify-content-around">
+											<button class="btn btn-secondary js-btn-prev" type="button" title="Prev">Prev</button>
+											<input type="submit" value="Create Poll" class="btn btn-primary">
+											<button class="btn btn-secondary ml-auto js-btn-next" type="button" title="Next">Next</button>
+										</div>
+									</div>
+								</div>
+								<!--single form panel-->
+								<!-- <div class="multisteps-form__panel shadow p-4 rounded" data-animation="scaleIn">
+									<h3 class="multisteps-form__title text-light">Additional Comments</h3>
+									<div class="multisteps-form__content">
+										<div class="form-row mt-4">
+											<textarea class="multisteps-form__textarea form-control" placeholder="Additional Comments and Requirements"></textarea>
+										</div>
+										<div class="button-row d-flex mt-4 justify-content-around">
+											<button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+											<button class="btn btn-success ml-auto" type="button" title="Send">Send</button>
+										</div>
+									</div>
+								</div> -->
+							</form>
+						</div>
+					</div>
+				</div>
+		</div>
+		</div>
+	</header>
+{% endblock content %}

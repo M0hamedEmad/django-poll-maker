@@ -1,11 +1,7 @@
 {% extends 'poll/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-    {% if user.is_authenticated %}
-    <p class="p-2" style="font-size: 18px;"><a class="text-info" style="text-decoration: none;" href="{% url 'profile' %}">Hello, {{user.first_name}}</a>  <a class="text-secondary" style="text-decoration: none;" href="{% url 'logout' %}">logout</a></p>
-    {% else %}
-    <p class="p-2 " style="font-size: 18px;"><a class="text-secondary" style="text-decoration: none;" href="{% url 'login' %}">login</a></p>
-    {% endif %}
+<div class="create-form">
     <div class="form-container">
         <div class="form-header w-100 p-4 ">
             <h2>Create Poll Form</h2>
@@ -13,12 +9,14 @@
         <form action="" method="POST" class="poll-form">
             {% csrf_token %}
             <div class="form-body mb-2">
-                {{poll_form|crispy}}
-                {{option_form|crispy}}
+                {{ form }}
+                {{ poll_form|crispy }}
+                {{answer_form|crispy}}
                 <a href="{% url 'create_poll' %}?number_of_options={{nop|add:'1'}}" class="btn btn-secondary mb-1" style="float: right;">+</a>
             </div>
             <button class="btn btn-primary w-100" style="height: 60px;" type="submit">Create Poll</button>
-
         </form>
+        <form action="" method="get"></form>
     </div>
+</div>
 {% endblock content %}

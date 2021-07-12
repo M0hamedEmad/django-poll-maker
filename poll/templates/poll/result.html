@@ -11,11 +11,11 @@
         <div class="p-4">
             <table class="table table-striped poll-formp-5">
                 <tbody >
-                    {% for option in poll.options.all %}
+                    {% for answer in poll.answer.all %}
                         <tr>
-                            <h3 class="mb-2 result">{{option.option}}</h3>
+                            <h3 class="mb-2 result">{{answer}}</h3>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: {{ option.number_of_vote|get_the_percentage:total_votes }}%;" aria-valuenow="{{option.number_of_vote|get_the_percentage:total_votes}}" aria-valuemin="0" aria-valuemax="100">{{ option.number_of_vote|get_the_percentage:total_votes }}%</div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ answer.get_valid_votes|get_the_percentage:total_votes }}%;" aria-valuenow="{{ answer.get_valid_votes|get_the_percentage:total_votes }}" aria-valuemin="{{ answer.get_valid_votes|get_the_percentage:total_votes }}" aria-valuemax="100">{{ answer.get_valid_votes|get_the_percentage:total_votes }}%</div>
                             </div>
                             <div class="mt-2">{{option.number_of_vote}} Vote</div>
                             <hr>
@@ -23,11 +23,14 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a class="btn btn-info" href="{% url 'vote' poll.id %}">Vote</a>
-            <a class="btn btn-secondary " href="{% url 'result' poll.id %}">result</a>
+          
         </div>
     </div>
-    <div class="w-50 m-auto" id="myChart"></div>
+    
+    <hr class="m-5">
+    <h2 class='text-light m-2 text-center'>votes</h2>
+    <div class="w-50 m-auto" id="myChart">
+    </div>
 
     <script>
 

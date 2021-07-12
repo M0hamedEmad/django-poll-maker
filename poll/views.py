@@ -1,57 +1,167 @@
-# from django.shortcuts import render, get_object_or_404  ,redirect, Http404
-# from django.forms import inlineformset_factory
-# from django.contrib import messages
-# from django.http import JsonResponse
-# from .models import Poll, Option
-# from .forms import PollForm, OptionForm
+from django.shortcuts import reverse, get_object_or_404, redirect
+from django.views.generic import CreateView, DeleteView, TemplateView, DetailView, DetailView, FormView, View
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.utils.timezone import now
+from .models import Poll, Answer, Vote
+from .forms import PollForm, AnswerForm, PollConfigForm, AnswerFormSet
+from requests import get
 
-# def createPoll(request):
-#     """Create A poll """
-#     # number of options or 5 options
-#     number_of_options = request.GET.get('number_of_options') or 5
-#     # max number of options is 30
-#     number_of_options = int(number_of_options) if int(number_of_options) <= 30 else 5
+def get_client_ip():
+    return get('https://api.ipify.org').text
 
-#     OptionFormSet = inlineformset_factory(Poll, Option, fields=('option',), can_delete=False, form=OptionForm, extra= number_of_options)
-   
+class HomeView(TemplateView):
+    template_name = 'poll/home.html'
+    
+    def get_context_data(self, **kwargs):
+        """ Override get_context method to add answer form set and poll config form
 
-#     if request.method == 'POST':
-#         poll_form = PollForm(request.POST)
-#         if poll_form.is_valid():
-#             poll = poll_form.save(commit=False)
-#             if request.user.is_authenticated:
-#                 poll.author = request.user 
-#             poll.save()
-
-#         formset = OptionFormSet(request.POST, instance=poll)
-#         if formset.is_valid():
-#             formset.save()
-#             return redirect('vote', poll.pk)
+        Returns:
+            context with answer_form
+        """
+        context = super().get_context_data(**kwargs)
+        context['form'] = PollForm(self.request.POST or None)
+        context['answer_form'] = AnswerFormSet(self.request.POST or None)
+        context['poll_form'] = PollConfigForm(self.request.POST or None)
         
-#     poll_form = PollForm()
-#     formset = OptionFormSet()
+        return context
 
-#     context = {
-#         'poll_form':poll_form,
-#         'option_form':formset,
-#         'nop':number_of_options,
-#     }
-#     return render(request, 'poll/create_poll.html', context)
+class PollCreateView(CreateView):
+    model = Poll
+    form_class = PollForm
+    template_name = 'poll/create_poll.html'
 
-# def deletePoll(request, pk):
-#     poll = get_object_or_404(Poll, pk=pk)
-#     if request.user != poll.author:
-#         raise Http404
+    def get_context_data(self, **kwargs):
+        """ Override get_context method to add answer form set and poll config form
+
+        Returns:
+            context with answer_form
+        """
+        context = super().get_context_data(**kwargs)
+        context['answer_form'] = AnswerFormSet(self.request.POST, files=self.request.FILES or None)
+        context['poll_form'] = PollConfigForm(self.request.POST or None)
         
-#     if request.method == 'POST':
-#         poll.delete()
-#         return redirect('/')
+        return context
 
-#     context = {
-#         'poll':poll,
-#     }
-#     return render(request, 'poll/delete_poll.html', context)
+    def form_valid(self, form):
+        """ override this mehod to check if form set if vaild save question and answers
 
+        Returns:
+            [type]: [description]
+        """
+        answer_from_set = self.get_context_data().get('answer_form')
+        poll_form = self.get_context_data().get('poll_form')
+        
+        if answer_from_set.is_valid() and poll_form.is_valid():
+            self.object = form.save(commit=False)
+            self.object.author = self.request.user if self.request.user.is_authenticated else None
+            self.object.save()
+            
+            poll_form = PollConfigForm(self.request.POST, instance=self.object)
+            poll_form.save()
+            
+            answer_from_set.instance = self.object
+            answer_from_set.save()
+            messages.success(self.request, f'The question "{self.object.question}" has been created successfully')
+            return super().form_valid(form)
+        
+    def get_success_url(self):
+        return reverse('create_poll')
+        
+class PollDeleteView(UserPassesTestMixin, DeleteView):
+    model = Poll
+    template_name = 'poll/delete_poll.html'
+    success_url = '/'
+    
+    def test_func(self):
+        poll = self.get_object()
+
+        try:
+            return True if poll.author == self.request.user or poll.pollcode.code == self.request.GET.get('code') else False
+        except:
+            return False
+       
+class PollDetailView(DetailView):
+    model = Poll
+    template_name = 'poll/voting.html'
+    context_template_name = 'poll'
+    
+    def get(self, request, *args, **kwargs):
+        poll = self.get_object()
+        if poll.end_at and poll.end_at < now():
+            messages.info(request, "this poll is end")
+            if not poll.hide_results:
+                return redirect('result', slug=poll.slug)
+        
+        return super().get(request, *args, **kwargs)
+ 
+ 
+    def get_context_data(self, **args):
+        context = super().get_context_data(**args)
+        poll = self.get_object()
+        
+        context['poll_is_end'] = True if poll.end_at and poll.end_at < now() else False
+        
+        return context
+
+class VoteCreate(View):
+    def post(self, request, *args, **kwargs):
+        poll_id = int(request.POST.get('poll_id'))
+        answers_id = request.POST.getlist('answer')
+        if poll_id and answers_id:
+            poll = Poll.objects.filter(id=poll_id)
+            
+            answers = Answer.objects.filter(id__in=answers_id)
+            for answer in answers:
+                if answer.poll_question.id == poll_id:
+                    vote = Vote()
+                    vote.answer = answer
+                    vote.user = request.user if request.user.is_authenticated else None
+                    vote.ip = get_client_ip()
+                    vote.save()
+        
+        return redirect('result', slug=poll.first().slug)
+    
+class ResultView(UserPassesTestMixin, DeleteView):
+    model = Poll
+    template_name = 'poll/result.html'
+    context_template_name = 'poll'
+    
+    def test_func(self):
+        poll = self.get_object()
+
+        if not poll.hide_results or poll.author == self.request.user:
+            return True
+        
+        try:
+            return poll.pollcode.code == self.request.GET.get('code')
+        except:
+            return False
+        
+    def get_context_data(self, **args):
+        context = super().get_context_data(**args)
+        total_votes = 0
+            
+        for answer in self.get_object().answer.all():
+            total_votes += answer.get_valid_votes()
+        
+        context['total_votes'] = total_votes
+        
+        return context
+    
+def resultDate(request, pk):
+    poll = get_object_or_404(Poll, pk=pk)
+    answers = poll.answer.all()
+
+    result_date = []
+
+    for answer in answers:
+        result_date.append({answer.answer:answer.get_valid_votes()})
+
+    return JsonResponse(result_date, safe=False)
+
+    
 # def vote(request, pk):
 #     poll = get_object_or_404(Poll, pk=pk)
 #     if request.method == 'POST':
@@ -86,13 +196,3 @@
 #     }
 #     return render(request, 'poll/result.html', context)
 
-# def resultDate(request, pk):
-#     poll = get_object_or_404(Poll, pk=pk)
-#     options = poll.options.all()
-
-#     result_date = []
-
-#     for option in options:
-#         result_date.append({option.option:option.number_of_vote})
-
-#     return JsonResponse(result_date, safe=False)

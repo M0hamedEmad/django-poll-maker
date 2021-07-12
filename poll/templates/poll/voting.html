@@ -1,30 +1,79 @@
 {% extends 'poll/base.html' %}
+{% block title %}{{poll}}{% endblock title %}
 {% block content %}
-<div class="form-container rounded-3">
-    <div class="voting-form-header">
+  <div class="form-container rounded-3 vote">
+    {% if poll.status and not poll_is_end %}
+      <div class="voting-form-header">
         <h2>{{poll.question}}</h2>
-        <p>Chosse one of these option</p>
-    </div>
-    <form method="POST" class="poll-form p-4">
+        <p>
+          {% if poll.multiple_answers %}
+            Chosse multiple answers
+          {% else %}
+            Chosse one of these option
+          {% endif %}
+        </p>
+        {% if poll.image %}
+          <img src="{{poll.image.url}}" alt="" srcset="">
+        {% endif %}
+      </div>
+      <form action="{% url 'add-vote' %}" method='POST' class="poll-form p-4">
         {% csrf_token %}
-        {% for option in poll.options.all %}
-          <div class="form-check">
-              <input class="form-check-input" type="radio" name="option" id="{{option.option}}" value="{{option.option}}">
-              <label class="fform-check-label" for="{{option.option}}">
-                {{option.option}}
-              </label>
+          {% for answer in poll.answer.all %}
+          <div class="form-check p-0">
+            <label class="fform-check-label" for="{{answer.id}}">
+                {{ answer }}
+                <input class="form-check-input" type=
+                {% if poll.multiple_answers %}
+                  'checkbox'
+                {% else %}
+                  "radio"
+                {% endif %}
+                  name="answer" id="{{answer.id}}" value="{{answer.id}}">
+                      {% if answer.image %}
+                        <img src="{{answer.image.url}}" alt="" srcset="">
+                      {% endif %}
+                </label>
           </div>
           <hr>
-        {% endfor %}
-        {% if messages %}
-          {% for message in messages %}
-            <p class="alert alert-warning">{{message}}</p>
           {% endfor %}
+          <input type="hidden" name="poll_id" value="{{poll.id}}">
+          <input class="btn btn-primary mt-4" type="submit" value="Submit Your Vote">
+          {% if not poll.hide_results %}
+            <a href="{% url 'result' poll.slug %}" class="btn btn-info mt-4">See Result</a>
+          {% endif %}
+      </form>
+    {% else %}
+      <div class="voting-form-header">
+        {% if poll_is_end %}
+        <h2>Poll is End</h2>
+        {% else %}
+        <h2>This Poll Is Not Active</h2>
         {% endif %}
-        <button class="btn btn-primary" type="submit">Submit Your Vote</button>
-        <a class="btn btn-secondary" href="{% url 'result' poll.id %}">result</a>
-
-    </form>
-
-</div>
+        {% if not poll.hide_results %}
+          <a href="{% url 'result' poll.slug %}" class="btn btn-info mt-4">See Result</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="container">
+    <div class="card bg-transparent text-light text-center w-75 m-auto">
+      {% if poll.title %}
+        <div class="card-header">
+          {{poll.title}}
+        </div>
+      {% endif %}
+      {%  if poll.summary %}
+        <div class="card-body">
+          <h5 class="card-title">Summary</h5>
+          <p class="card-text">{{poll.summary}}</p>
+        </div>
+      {% endif %}
+      {%  if poll.end_at %}
+        <div class="card-footer text-muted">
+          {{poll.end_at|timeuntil}} left until the poll ends
+        </div>
+      {% endif %}          
+    </div>
+  </div>
+  
 {% endblock content %}

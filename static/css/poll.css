@@ -1,0 +1,319 @@
+.form-container{
+    width: 600px;
+    margin: 10px auto;
+    background-color: white;
+}
+
+body{
+    background-color: #383a4f;
+}
+
+.form-header{
+    background: #e55e47;
+}
+
+.form-header h2 {
+    color: white;
+    line-height: 1.618em;
+    font-size: 1.714em;
+    font-weight: 400;
+}
+
+.form-body{
+    padding: 2px 5px;
+}
+.tab-content.card-body {
+    padding: 11px 0 0;
+}
+#question {
+    position: relative;
+}
+
+#question #div_id_question {
+    flex-basis: 100%;
+}
+
+#question #div_id_question textarea#id_question {
+    height: 70px;
+}
+
+#question #div_id_image .form-control.custom-file {
+    display: none;
+}
+
+#question label[for='id_image'] {
+    position: absolute;
+    transform: translateY(-50%);
+    right: 4px;
+    font-size: 5px;
+    padding: 2px 5px;
+    border: 1px solid #6c757d;
+    cursor: pointer;
+    margin-top: -50px;
+}
+
+div#settings input, div#settings select {
+    margin: 14px 0px;
+}
+div#settings select {
+    cursor: pointer
+} 
+div#settings select:hover {
+    background-color: #f1f1f1;
+}
+#settings textarea#id_summary {
+    height: 300px;
+}
+
+.home-nav {
+  background-color: #383a4f;
+}
+
+header {
+    background-color: #383a4f;
+    min-height: 100vh;
+    height: 100%;
+}
+.multisteps-form {
+    margin-top: 15px
+}
+
+.multisteps-form form{
+    background-color: #525575;
+}
+
+.multisteps-form .row:first-child{
+    justify-content: center;
+}
+
+.multisteps-form__progress {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+
+.multisteps-form__progress-btn {
+  transition-property: all;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  transition-delay: 0s;
+  position: relative;
+  padding-top: 20px;
+  color: rgba(108, 117, 125, 0.7);
+  text-indent: -9999px;
+  border: none;
+  background-color: transparent;
+  outline: none !important;
+  cursor: pointer;
+}
+
+@media (min-width: 500px) {
+  .multisteps-form__progress-btn {
+    text-indent: 0;
+  }
+}
+
+.multisteps-form__progress-btn:before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: block;
+  width: 13px;
+  height: 13px;
+  content: '';
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  transition: all 0.15s linear 0s, -webkit-transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
+  transition: all 0.15s linear 0s, transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
+  transition: all 0.15s linear 0s, transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s, -webkit-transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background-color: #fff;
+  box-sizing: border-box;
+  z-index: 3;
+}
+
+.multisteps-form__progress-btn:after {
+  position: absolute;
+  top: 5px;
+  left: calc(-50% - 13px / 2);
+  transition-property: all;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  transition-delay: 0s;
+  display: block;
+  width: 100%;
+  height: 2px;
+  content: '';
+  background-color: currentColor;
+  z-index: 1;
+}
+
+.multisteps-form__progress-btn:first-child:after {
+  display: none;
+}
+
+.multisteps-form__progress-btn.js-active {
+  color: #007bff;
+}
+
+.multisteps-form__progress-btn.js-active:before {
+  -webkit-transform: translateX(-50%) scale(1.2);
+          transform: translateX(-50%) scale(1.2);
+  background-color: currentColor;
+}
+
+.multisteps-form__form {
+  position: relative;
+}
+
+.multisteps-form__panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.multisteps-form__panel.js-active {
+  height: auto;
+  opacity: 1;
+  visibility: visible;
+}
+.multisteps-form__panel[data-animation="scaleIn"] {
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
+}
+
+.multisteps-form__panel[data-animation="scaleIn"].js-active {
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: linear;
+  transition-delay: 0s;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+
+.config-form input:not(input[type='submit']):not(input[type='file']),
+.config-form textarea,
+.config-form select {
+  background: none;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  width: 100%;
+  transition: .3s;
+  outline: none;
+
+}
+
+.config-form option {
+  color: black;
+  outline: none;
+}
+
+.config-form input:not(input[type='file']):focus,
+.config-form select:focus, 
+.config-form textarea:focus {
+    background: none;
+    color: white
+}
+
+.question {
+  position: relative;
+}
+
+.question input#id_image {
+  display: none;
+}
+
+.question label[for='id_image'] {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: white;
+  border: 1px solid #0d6efd;
+  padding: 3px 5px;
+}
+
+.answer-form input[type='file'] {
+  display: none;
+}
+
+.answer-form label {
+  color: white;
+  position: absolute;  
+  font-size: 13px;
+  color: white;
+  border: 1px solid #0d6efd;
+  padding: 3px 5px;
+  cursor: pointer;
+  margin-top: -6%;
+  margin-left: 87%;
+  transition: .3s;
+}
+
+.answer-form label:hover {
+  background-color: #0d6efd;
+}
+
+@media (max-width: 1200px) {
+  .answer-form label {
+    margin-top: -9%;
+    margin-left: 81%;
+  }
+}
+
+@media (max-width: 600px) {
+  .answer-form label {
+    margin-top: -12%;
+    margin-left: 73%;
+  }
+}
+
+.config-form label {
+  color: #f5f5f57d;
+  padding: 4px 1px;
+}
+
+.vote {
+  padding: 20px;
+}
+
+label.fform-check-label {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+
+.form-check:hover {
+  background-color: #f8f9fa;
+}
+
+.poll-form hr {
+  margin: 0;
+}
+
+.form-container .voting-form-header {
+  padding: 10px
+}
+
+.vote img {
+  max-height: 250px;
+  min-width:80%;
+  display: block;
+  margin: 0 auto;
+}
+
+.vote label img {
+  width: 100%;
+  margin-top: 10px;
+}
