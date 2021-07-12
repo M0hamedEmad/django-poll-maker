@@ -64,8 +64,8 @@ class Answer(models.Model):
     
 class Vote(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='votes')
-    ip = models.GenericIPAddressField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    ip = models.GenericIPAddressField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     is_valid = models.BooleanField(default=True)

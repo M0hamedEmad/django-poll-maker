@@ -31,7 +31,7 @@ class PollCreateView(CreateView):
     model = Poll
     form_class = PollForm
     template_name = 'poll/create_poll.html'
-
+    
     def get_context_data(self, **kwargs):
         """ Override get_context method to add answer form set and poll config form
 
@@ -67,7 +67,7 @@ class PollCreateView(CreateView):
             return super().form_valid(form)
         
     def get_success_url(self):
-        return reverse('create_poll')
+        return reverse('vote', kwargs={'slug':self.object.slug})
         
 class PollDeleteView(UserPassesTestMixin, DeleteView):
     model = Poll
@@ -96,12 +96,20 @@ class PollDetailView(DetailView):
         
         return super().get(request, *args, **kwargs)
  
- 
     def get_context_data(self, **args):
         context = super().get_context_data(**args)
         poll = self.get_object()
         
         context['poll_is_end'] = True if poll.end_at and poll.end_at < now() else False
+        
+        checked_answers = []
+        answers = poll.answer.all()
+        for answer in answers:
+            for vote in answer.votes.all():
+                if vote.user == self.request.user or vote.ip == get_client_ip():
+                    checked_answers.append(vote.answer)
+        
+        context['checked_answers'] = checked_answers
         
         return context
 
@@ -110,18 +118,24 @@ class VoteCreate(View):
         poll_id = int(request.POST.get('poll_id'))
         answers_id = request.POST.getlist('answer')
         if poll_id and answers_id:
-            poll = Poll.objects.filter(id=poll_id)
+            poll = get_object_or_404(Poll, id=poll_id)
+            ip = get_client_ip()
             
+            for answer in poll.answer.all():
+                for vote in answer.votes.all():
+                    if vote.user == self.request.user or vote.ip == ip:
+                        vote.delete()
+                                        
             answers = Answer.objects.filter(id__in=answers_id)
             for answer in answers:
                 if answer.poll_question.id == poll_id:
                     vote = Vote()
                     vote.answer = answer
                     vote.user = request.user if request.user.is_authenticated else None
-                    vote.ip = get_client_ip()
+                    vote.ip = ip
                     vote.save()
         
-        return redirect('result', slug=poll.first().slug)
+        return redirect('result', slug=poll.slug)
     
 class ResultView(UserPassesTestMixin, DeleteView):
     model = Poll
@@ -162,6 +176,8 @@ def resultDate(request, pk):
     return JsonResponse(result_date, safe=False)
 
     PollCreateView
+
+
 # def vote(request, pk):
 #     poll = get_object_or_404(Poll, pk=pk)
 #     if request.method == 'POST':

@@ -28,6 +28,9 @@
                 {% else %}
                   "radio"
                 {% endif %}
+                {% if answer in checked_answers %}
+                  checked
+                {% endif %}
                   name="answer" id="{{answer.id}}" value="{{answer.id}}">
                       {% if answer.image %}
                         <img src="{{answer.image.url}}" alt="" srcset="">
