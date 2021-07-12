@@ -161,7 +161,7 @@ def resultDate(request, pk):
 
     return JsonResponse(result_date, safe=False)
 
-    
+    PollCreateView
 # def vote(request, pk):
 #     poll = get_object_or_404(Poll, pk=pk)
 #     if request.method == 'POST':
