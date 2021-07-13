@@ -22,4 +22,16 @@ python manage.py runserver # run the server
  go to http://127.0.0.1:8000/admin  a django admin
  or http://127.0.0.1:8000/dashboard  a dashboard for admin and editors
  
+# Secure
+The IP of the device is recorded after each vote is made, and when the device re-enters the poll, its vote is returned, and if it modifies the vote, the initial vote is erased.
 
+# Features
+ singel answer vote or multiple answers
+ Determine when voting begins and ends
+ Activate or inactive the poll
+ visitor counter
+ Title and Summary Poll
+ image in question or answer
+ code for poll if poll creator is Unknown to make delete or update to poll
+ login with google account
+ 
