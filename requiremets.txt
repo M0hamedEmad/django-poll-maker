@@ -1,0 +1,5 @@
+Django==3.2.4
+django-allauth==0.45.0
+django-crispy-forms==1.11.2
+Pillow==8.2.0
+requests==2.25.1
