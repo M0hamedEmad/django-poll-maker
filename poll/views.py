@@ -1,5 +1,5 @@
 from django.shortcuts import reverse, get_object_or_404, redirect
-from django.views.generic import CreateView, DeleteView, TemplateView, DetailView, DetailView, FormView, View
+from django.views.generic import CreateView, DeleteView, TemplateView, DetailView, DetailView, FormView, View, UpdateView
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -30,7 +30,6 @@ class HomeView(TemplateView):
 class PollCreateView(CreateView):
     model = Poll
     form_class = PollForm
-    template_name = 'poll/create_poll.html'
     
     def get_context_data(self, **kwargs):
         """ Override get_context method to add answer form set and poll config form
@@ -68,7 +67,28 @@ class PollCreateView(CreateView):
         
     def get_success_url(self):
         return reverse('vote', kwargs={'slug':self.object.slug})
+
+
+class PollUpdateView(UserPassesTestMixin, UpdateView):
+    model = Poll
+    form_class = PollConfigForm
+    template_name = 'poll/create_poll.html'
+    
+    def test_func(self):
+        poll = self.get_object()
+        user =  self.request.user
+        try:
+            return True if user.is_superuser or poll.author == user or poll.pollcode.code == self.request.GET.get('code') else False
+        except:
+            return False
+    
         
+        return context
+
+        
+    def get_success_url(self):
+        return reverse('vote', kwargs={'slug':self.object.slug})
+      
 class PollDeleteView(UserPassesTestMixin, DeleteView):
     model = Poll
     template_name = 'poll/delete_poll.html'
@@ -81,6 +101,7 @@ class PollDeleteView(UserPassesTestMixin, DeleteView):
             return True if poll.author == self.request.user or poll.pollcode.code == self.request.GET.get('code') else False
         except:
             return False
+
        
 class PollDetailView(DetailView):
     model = Poll

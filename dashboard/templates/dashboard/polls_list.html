@@ -1,0 +1,46 @@
+{% extends 'dashboard/base.html' %}
+{% load i18n %}
+{% block content %}
+	<div class="content-header">
+		<legend>{% trans 'posts list' %}</legend>
+		<a href="/" class="btn info">{% trans 'add Poll' %}</a>
+	</div>
+	<div class="table">
+		<table>
+		<thead>
+			<tr>
+				<th>{% trans 'Poll' %}</th>
+				<th>{% trans 'Poll static' %}</th>
+				<th>{% trans 'views' %}</th>
+				<th>{% trans 'start_at' %}</th>
+				<th>{% trans 'end_at' %}</th>
+				<th>{% trans 'Results' %}</th>
+				<th>{% trans 'status' %}</th>
+				<th>{% trans 'Update' %}</th>
+				<th>{% trans 'Delete' %}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for poll in polls %}
+			<tr>
+				<td>{{poll.question|slice:'40'}}</td>
+				<td>Staitc</td>
+				<td>{{poll.views}}</td>
+				<td>{{poll.start_at|date:'d M Y'}}</td>
+				<td>{{poll.end_at|date:'d M Y'|default:'None'}}</td>
+				<td><a href="{% url 'result' poll.slug %}"><div class="btn btn-sm info">{% trans 'Results' %}</div></a></td>
+				{% if poll.active %}
+				<td><div class="btn btn-sm info">{% trans 'Active' %}</div></td>
+				{% else %}
+				<td><div class="btn btn-sm warning">{% trans 'Inactive' %}</div></td>
+				{% endif %}
+				<td><a href="{% url 'update_poll' poll.id %}"><div class="btn btn-sm info">{% trans 'Update' %}</div></a></td>
+				<td><a href="{% url 'delete_poll' poll.id %}"><div class="btn btn-sm danger">{% trans 'delete' %}</div></a></td>
+			</tr>
+			{% empty %}
+				<p>{% trans 'no posts' %}</p>
+			{% endfor %}
+		</tbody>
+		</table>				
+	</div>
+{% endblock %}

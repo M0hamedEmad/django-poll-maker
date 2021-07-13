@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 
     # project Apps
     'poll.apps.PollConfig',
-    # 'account.apps.AccountConfig',
+    'dashboard.apps.DashboardConfig',
 
     #package
     'crispy_forms',
@@ -155,7 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #cispy forms configration
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'account_login'
 
 # AllAuth Config
 

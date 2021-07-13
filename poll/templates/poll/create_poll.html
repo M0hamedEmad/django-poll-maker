@@ -1,18 +1,15 @@
 {% extends 'poll/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="create-form">
+<div class="account">
     <div class="form-container">
         <div class="form-header w-100 p-4 ">
             <h2>Create Poll Form</h2>
         </div>
-        <form action="" method="POST" class="poll-form">
+        <form action="" method="POST" class="config-form">
             {% csrf_token %}
             <div class="form-body mb-2">
-                {{ form }}
-                {{ poll_form|crispy }}
-                {{answer_form|crispy}}
-                <a href="{% url 'create_poll' %}?number_of_options={{nop|add:'1'}}" class="btn btn-secondary mb-1" style="float: right;">+</a>
+                {{ form|crispy }}
             </div>
             <button class="btn btn-primary w-100" style="height: 60px;" type="submit">Create Poll</button>
         </form>
