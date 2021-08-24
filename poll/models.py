@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.utils.text import slugify
-from unidecode import unidecode
 
 result_choices = [
     (True, 'Hide Results'),
