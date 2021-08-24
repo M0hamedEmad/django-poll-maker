@@ -1,5 +1,23 @@
 # Django Poll Maker
 An app that lets you make advanced and secure poll
+
+# Demo
+## https://djpollmaker.herokuapp.com/
+
+###  login
+username : demo
+password: demodemo123
+
+https://djpollmaker.herokuapp.com/accounts/login/
+
+deshboard
+![](https://user-images.githubusercontent.com/75542426/130637213-ba0eabe6-3958-4e6a-b02f-158d88f14610.png)
+
+![1](https://user-images.githubusercontent.com/75542426/130637090-f49c3568-02be-4062-b32a-8299265e79ed.png)
+![2](https://user-images.githubusercontent.com/75542426/130637098-d1ab3f37-f95b-4347-98e0-d46087f22902.png)
+![3](https://user-images.githubusercontent.com/75542426/130637102-f0be3d2f-0adf-4e66-ab0a-7b80e114e9fb.png)
+
+
 # Usage
 It's best to install Python projects in a Virtual Environment. Once you have set up a Virtual Environment, clone this project
  ```
@@ -34,4 +52,5 @@ The IP of the device is recorded after each vote is made, and when the device re
  * image in question or answer
  * code for poll if poll creator is Unknown to make delete or update to poll
  * login with google account
- 
+ * 
+
