@@ -1,7 +1,8 @@
-asgiref==3.4.1
-certifi==2021.5.30
-cffi==1.14.6
+asgiref==3.8.0
+certifi==2024.2.2
+cffi==1.16.0
 chardet==4.0.0
+charset-normalizer==3.3.2
 cryptography==3.4.7
 defusedxml==0.7.1
 Django==3.2.4
@@ -10,9 +11,8 @@ django-crispy-forms==1.11.2
 gunicorn==20.1.0
 idna==2.10
 oauthlib==3.1.1
-Pillow==8.2.0
-psycopg2==2.9.1
-pycparser==2.20
+pillow==10.2.0
+pycparser==2.21
 PyJWT==2.1.0
 python-decouple==3.4
 python3-openid==3.2.0
